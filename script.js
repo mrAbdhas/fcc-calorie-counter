@@ -57,7 +57,7 @@ function addEntry(){
 
 addEntryButton.addEventListener("click", addEntry);
 
-function getCaloriesFromInputs(list){
+function getCaloriesFromInputs(list) {
    let calories = 0;
 
    for(let i=0; i < list.length; i++){
@@ -66,8 +66,50 @@ function getCaloriesFromInputs(list){
       
       /* if statement that checks if invalidInputMatch is truthy. */
       if(invalidInputMatch){
-   
+         alert(`Invalid Input: ${invalidInputMatch[0]}`);
+         isError = true;
+         return null;
       }
+      calories += Number(currVal);
    }
+   return calories;
+
+}
+
+/* This function will be another event listener, 
+so the first argument passed will be the 
+browser event – e is a common name for this parameter */
+function calculateCalories(e) {
+   e.preventDefault();
+   isError = false;
+   const breakfastNumberInputs = document.querySelectorAll("#breakfast input[type=number]");
+   const lunchNumberInputs = document.querySelectorAll('#lunch input[type=number]');
+   const dinnerNumberInputs = document.querySelectorAll('#dinner input[type=number]');
+   const snacksNumberInputs = document.querySelectorAll('#snacks input[type=number]');
+   const exerciseNumberInputs = document.querySelectorAll('#exercise input[type=number]');
+
+   /* Now that you have your lists of elements, 
+   you can pass them to your getCaloriesFromInputs 
+   function to extract the calorie total.*/
+   const breakfastCalories = getCaloriesFromInputs(breakfastNumberInputs);
+   const lunchCalories = getCaloriesFromInputs(lunchNumberInputs);
+   const dinnerCalories = getCaloriesFromInputs(dinnerNumberInputs);
+   const snacksCalories = getCaloriesFromInputs(snacksNumberInputs);
+   const exerciseCalories = getCaloriesFromInputs(exerciseNumberInputs);
+   //
+
+   const budgetCalories = getCaloriesFromInputs([budgetNumberInput]);
+   if(isError){
+      return
+   }
+
+   // cakculations
+   const consumedCalories = breakfastCalories + lunchCalories + dinnerCalories +snacksCalories;
+   const remainingCalories = (budgetCalories - consumedCalories) + exerciseCalories;
+   const surplusOrDeficit = remainingCalories >= 0 ? "Surplus" : "Deficit";
+   //
+
+   output.innerHTML = `
+   <span class="${surplusOrDeficit.toLowerCase()}">${remainingCalories} Calorie ${surplusOrDeficit}</span>`.toLowerCase();
 
 }
